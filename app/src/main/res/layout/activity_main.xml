@@ -6,19 +6,43 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="365dp"
-        android:layout_height="545dp"
-        android:text="Button"
-        tools:layout_editor_absoluteX="23dp"
-        tools:layout_editor_absoluteY="91dp" />
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="D.30"
+        android:textColor="@color/black"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/indoor_view"
+        app:layout_constraintEnd_toEndOf="@+id/indoor_view"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/indoor_view"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.estimote.indoorsdk_module.view.IndoorLocationView
+        android:id="@+id/indoor_view"
+        android:layout_width="match_parent"
+        android:layout_height="750dp"
+        android:background="@color/background_green"
+
+        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintEnd_toEndOf="@+id/button2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/button2"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="365dp"
+        android:layout_width="310dp"
         android:layout_height="50dp"
+        android:layout_marginBottom="16dp"
         android:text="Stop"
-        tools:layout_editor_absoluteX="23dp"
-        tools:layout_editor_absoluteY="654dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/indoor_view" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

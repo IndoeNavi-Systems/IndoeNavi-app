@@ -8,4 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="background_green">#7da786</color>
+    <color name="stop_button">#c90000</color>
+    <color name="nav_circle">#1800cc</color>
 </resources>

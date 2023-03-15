@@ -6,11 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <com.estimote.indoorsdk_module.view.IndoorLocationView
+        android:id="@+id/indoor_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/rounded_corners_view"
+        app:layout_constraintBottom_toTopOf="@+id/stopBtn"
+        app:layout_constraintEnd_toEndOf="@+id/stopBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/stopBtn"
+        app:layout_constraintTop_toBottomOf="@+id/destinationTextView"
+        app:layout_constraintWidth_percent="0.6" />
+
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/destinationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="D.30"
+        android:text="@string/current_destination"
         android:textColor="@color/black"
         android:textSize="40sp"
         android:textStyle="bold"
@@ -20,24 +32,42 @@
         app:layout_constraintStart_toStartOf="@+id/indoor_view"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.estimote.indoorsdk_module.view.IndoorLocationView
-        android:id="@+id/indoor_view"
-        android:layout_width="match_parent"
-        android:layout_height="750dp"
-        android:background="@color/background_green"
 
-        app:layout_constraintBottom_toTopOf="@+id/button2"
-        app:layout_constraintEnd_toEndOf="@+id/button2"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/button2"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/indoor_view">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:srcCompat="@drawable/baseline_circle_24" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:layout_constraintBottom_toBottomOf="@+id/button"
+            app:layout_constraintEnd_toEndOf="@+id/button"
+            app:layout_constraintStart_toStartOf="@+id/button"
+            app:layout_constraintTop_toTopOf="@+id/button"
+            app:srcCompat="@drawable/baseline_arrow_upward_24" />
+
+
+    </FrameLayout>
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="310dp"
-        android:layout_height="50dp"
+        android:id="@+id/stopBtn"
+        android:layout_width="210dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Stop"
+        android:background="@drawable/rounded_corners_btn_stop"
+        android:text="@string/stop_text"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

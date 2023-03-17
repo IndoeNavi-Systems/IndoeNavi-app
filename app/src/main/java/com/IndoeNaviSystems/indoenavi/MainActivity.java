@@ -11,12 +11,14 @@ import android.widget.TextView;
 import com.IndoeNaviSystems.indoenavi.ApiRequest;
 import com.IndoeNaviSystems.indoenavi.ApiUrlConstants;
 import com.IndoeNaviSystems.indoenavi.Interfaces.VolleyCallBack;
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
 
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
+    ApiRequest apiRequest;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
         setContentView(R.layout.activity_main);
+
+        apiRequest = new ApiRequest(this);
 
         TextView tv = (TextView) findViewById(R.id.destinationTextView);
 
@@ -41,18 +45,11 @@ public class MainActivity extends AppCompatActivity {
         String destination = intent.getStringExtra("destination");
         tv.setText(destination);
 
-        ApiRequest apiRequest = new ApiRequest(this);
-        apiRequest.request(ApiUrlConstants.Weather, new VolleyCallBack() {
-            @Override
-            public void onSuccess(JSONObject json) {
-                tv.setText("Jens");
-            }
+        String sessionUrl = ApiUrlConstants.NewSession+"?area=ZBC Ringsted";
+        String mostSearchedDestination = ApiUrlConstants.DestinationVisits+"?area=ZBC Ringsted&destination=D.32";
+        apiRequest.stringRequest(sessionUrl, Request.Method.POST, null);
 
-            @Override
-            public void onFail(VolleyError error) {
-                tv.setText("noo");
-            }
-        });
+        apiRequest.stringRequest(mostSearchedDestination,Request.Method.POST,null);
 
     }
 }

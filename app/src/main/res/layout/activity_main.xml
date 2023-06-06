@@ -10,6 +10,7 @@
         android:id="@+id/indoor_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:backgroundTint="@color/material_dynamic_neutral_variant90"
         android:background="@drawable/rounded_corners_view"
         app:layout_constraintBottom_toTopOf="@+id/stopBtn"
         app:layout_constraintEnd_toEndOf="@+id/stopBtn"
@@ -59,9 +60,18 @@
 -->
 
         <ImageView
-            android:id="@+id/mapImageView"
+            android:id="@+id/mapImage"
+            android:scaleType="matrix"
+            android:layout_marginTop="20dp"
             android:layout_width="1024dp"
-            android:layout_height="512dp" />
+            android:layout_height="512dp"
+            app:srcCompat="@drawable/baseline_arrow_upward_24" />
+
+        <ImageView
+            android:id="@+id/mapPositionImage"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            app:srcCompat="@drawable/circle"  />
 
 
     </FrameLayout>

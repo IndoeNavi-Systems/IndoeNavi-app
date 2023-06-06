@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -8,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.indoenavisystems.indoenavi"
-        minSdk 28
+        minSdk 31
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -33,9 +34,12 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.estimote:indoorsdk:2.5.3'
-    implementation 'com.estimote:mustard:0.2.1'
     implementation 'com.android.volley:volley:1.2.1'
+    implementation files("C:\\Users\\krj\\Documents\\Github\\IndoNavi\\IndoeNavi-app\\app\\libs\\uwb-sdk-1.0.0-rc1.aar")
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation "androidx.core.uwb:uwb:1.0.0-alpha05"
+    implementation 'no.nordicsemi.android:ble-ktx:2.6.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

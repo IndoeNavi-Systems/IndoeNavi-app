@@ -67,8 +67,10 @@ public class SelectDestination extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 String selectedItem = (String)adapterView.getItemAtPosition(position);
 
-                Intent intent = new Intent(SelectDestination.this, com.indoenavisystems.indoenavi.MainActivity.class);
-                intent.putExtra("destination",selectedItem);
+//                Intent intent = new Intent(SelectDestination.this, com.indoenavisystems.indoenavi.MainActivity.class);
+//                intent.putExtra("destination",selectedItem);
+//                startActivity(intent);
+                Intent intent = new Intent(SelectDestination.this, com.indoenavisystems.indoenavi.MainActivity2.class);
                 startActivity(intent);
             }
         });

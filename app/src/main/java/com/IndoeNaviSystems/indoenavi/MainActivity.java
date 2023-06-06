@@ -1,5 +1,7 @@
 package com.indoenavisystems.indoenavi;
 
+import androidx.activity.result.ActivityResultCaller;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,12 +15,13 @@ import com.IndoeNaviSystems.indoenavi.ApiUrlConstants;
 import com.IndoeNaviSystems.indoenavi.Interfaces.VolleyCallBack;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
-
-import org.json.JSONObject;
+import com.estimote.uwb.api.*;
+import com.estimote.uwb.api.scanning.EstimoteUWBScanResult;
 
 public class MainActivity extends AppCompatActivity {
-
     ApiRequest apiRequest;
+    EstimoteUWBManager uwbManager = EstimoteUWBFactory.Companion.create();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
         apiRequest.stringRequest(sessionUrl, Request.Method.POST, null);
 
         apiRequest.stringRequest(mostSearchedDestination,Request.Method.POST,null);
+
+        //UWB Setup
 
     }
 }

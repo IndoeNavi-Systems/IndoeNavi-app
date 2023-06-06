@@ -3,6 +3,10 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
+
+        flatDir {
+            dirs("libs")
+        }
     }
 }
 dependencyResolutionManagement {
@@ -11,6 +15,10 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         jcenter()
+
+        flatDir {
+            dirs("libs")
+        }
     }
 }
 rootProject.name = "indoenavi"

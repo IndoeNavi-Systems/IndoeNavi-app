@@ -40,42 +40,33 @@ class MainActivity2 : AppCompatActivity() {
         uwbManager.uwbDevices.onEach {
             //display list of available devices in some kind of selectable list
             if(it is EstimoteUWBScanResult.Devices && jens < 1){
-                val h = it as EstimoteUWBScanResult.Devices
-                if(h.devices.size > 2){
-                    Log.d("UWB2",h.devices[0].toString())
-                    jens++;
-
-
-                    foundDevices = h.devices;
-//                    onMyMainActivityListItemClicked(h.devices[0])
-//
-                    moduleSwitcher = lifecycleScope.launch {
-                        while(true){
-                            dummy = 0;
-                            onMyMainActivityListItemClicked(h.devices[0])
-                            while(!deviceSwitch){
-                                delay(10);
+                if(it.devices.size > 2){
+                    val devices = it.devices
+                    if (devices.size > 2) {
+                        moduleSwitcher = lifecycleScope.launch{
+                            while (true){
+                                for (device in devices) {
+                                    //Make sure no ranging is ongoing
+                                    stopRanging()
+                                    delay(10)
+                                    onMyMainActivityListItemClicked(device)
+                                    while (!deviceSwitch) {
+                                        delay(10)
+                                    }
+                                    deviceSwitch = false
+                                    stopRanging()
+                                }
                             }
-                            deviceSwitch = false;
-                            stop()
-                            dummy = 1
-                            onMyMainActivityListItemClicked(h.devices[1])
-                            while(!deviceSwitch){
-                                delay(10);
-                            }
-                            deviceSwitch = false;
-                            stop()
-
                         }
                     }
-//
-//                    startRanging();
+                    jens++
                 }
             }
 
-            if(it is EstimoteUWBScanResult.Devices) {
-                val h = it as EstimoteUWBScanResult.Devices
-                foundDevices = h.devices;
+            when(it){
+                is EstimoteUWBScanResult.Devices -> foundDevices = it.devices;
+                is EstimoteUWBScanResult.Error -> Log.w("UWB2 scan error", "${it.errorCode}")
+                EstimoteUWBScanResult.ScanNotStarted -> Log.w("UWB2 scan not started", "scan not started")
             }
 
         }.launchIn(lifecycleScope)
@@ -84,7 +75,7 @@ class MainActivity2 : AppCompatActivity() {
             //display Beacon position
             when(it) {
                 is EstimoteUWBRangingResult.Position -> {
-
+                    deviceSwitch = true;
                     Log.d("UWB22", "Device id: ${it.device.address}   Position: ${it.position.distance?.value.toString()}   Azimuth: ${it.position.azimuth?.value}   time:${System.currentTimeMillis() - time2}   x:${DynamicView.GetPosition().x} y:${DynamicView.GetPosition().y}")
                     if (dummy == 0){
                         it.position.distance?.value?.let { it1 -> DynamicView.SetDistance1(it1) };
@@ -93,7 +84,6 @@ class MainActivity2 : AppCompatActivity() {
                         it.position.distance?.value?.let { it1 -> DynamicView.SetDistance2(it1) }
                     }
 
-                    deviceSwitch = true;
                 }
                 EstimoteUWBRangingResult.Error.IllegalArgumentException -> Log.d("UWBe",EstimoteUWBRangingResult.Error.IllegalArgumentException.message)
                 EstimoteUWBRangingResult.Error.IllegalStateException -> Log.d("UWB2e",EstimoteUWBRangingResult.Error.IllegalStateException.message)
@@ -119,7 +109,7 @@ class MainActivity2 : AppCompatActivity() {
         }
     }
 
-    fun stop() {
+    fun stopRanging() {
         job?.cancel()
     }
 

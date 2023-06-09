@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+
 
 import java.util.ArrayList;
 
@@ -23,6 +25,7 @@ public class SelectDestination extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         //Hide the action bar for more visual space.
         if (getSupportActionBar() != null) {
@@ -70,7 +73,7 @@ public class SelectDestination extends AppCompatActivity {
 //                Intent intent = new Intent(SelectDestination.this, com.indoenavisystems.indoenavi.MainActivity.class);
 //                intent.putExtra("destination",selectedItem);
 //                startActivity(intent);
-                Intent intent = new Intent(SelectDestination.this, com.indoenavisystems.indoenavi.MainActivity2.class);
+                Intent intent = new Intent(SelectDestination.this, MainActivity2.class);
                 startActivity(intent);
             }
         });

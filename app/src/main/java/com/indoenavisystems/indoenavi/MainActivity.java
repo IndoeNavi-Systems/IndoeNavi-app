@@ -1,12 +1,16 @@
 package com.indoenavisystems.indoenavi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.indoenavisystems.indoenavi.handlers.MapHandler;
@@ -23,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ApiRequest apiRequest;
     private MapHandler mapHandler;
+    private RouteNode routeNodeDestination;
 
     public MainActivity(){
         mapHandler = MapHandler.getInstance();
@@ -67,12 +72,17 @@ public class MainActivity extends AppCompatActivity {
         TextView tv = (TextView) findViewById(R.id.destinationTextView);
         Intent intent = getIntent();
         if(intent.getExtras() != null){
-            RouteNode routeNode = (RouteNode) intent.getSerializableExtra("routeNode");
-            tv.setText(routeNode.name);
+            routeNodeDestination = (RouteNode) intent.getSerializableExtra("routeNode");
+            tv.setText(routeNodeDestination.name);
+
             //Find map and set it to handler
-            mapHandler.setMap((Map) intent.getSerializableExtra("map"));
-            ImageView mapImage = findViewById(R.id.mapImage);
-            mapImage.setImageBitmap(mapHandler.getMap().getBitmap());
+            Map mapToSet = (Map) intent.getSerializableExtra("map");
+
+            if(mapToSet != null){
+                mapHandler.setMap(mapToSet);
+                ImageView mapImage = findViewById(R.id.mapImage);
+                mapImage.setImageBitmap(mapHandler.getMap().getBitmap());
+            }
         }
     }
     private void startPositionPointerThread(){
@@ -90,7 +100,34 @@ public class MainActivity extends AppCompatActivity {
                 ImageView mapPositionImage = findViewById(R.id.mapPositionImage);
                 mapPositionImage.setX((float)position.x - 8);
                 mapPositionImage.setY((float)position.y + 36);
+
+                //Set the position of the destination circle
+                Vec2 destinationPosition = new Vec2(routeNodeDestination.x,routeNodeDestination.y);
+
+                createCircleImage(destinationPosition, R.drawable.destinationcircle);
             }
         }, 0, 250, TimeUnit.MILLISECONDS);
+    }
+
+    private void createCircleImage(Vec2 destinationPosition, int drawableId) {
+        FrameLayout fl = findViewById(R.id.mapFrame);
+        ImageView iv = new ImageView(getApplicationContext());
+
+        //Set image
+        iv.setImageResource(drawableId);
+        //Set size and dimensions
+        //Get the pixel density (dp) to scale up the pixels
+        float factor = iv.getResources().getDisplayMetrics().density;
+        int imageSize = (int) (16 * factor);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(imageSize, imageSize);
+        iv.setLayoutParams(params);
+
+        //Set position
+        iv.setX((float) destinationPosition.x - 8);
+        iv.setY((float) destinationPosition.y + 36);
+
+        //Add to FrameLayout
+        fl.addView(iv);
+        fl.invalidate();
     }
 }

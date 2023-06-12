@@ -55,6 +55,11 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             app:srcCompat="@drawable/circle"  />
+        <ImageView
+            android:id="@+id/mapDestinationImage"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            app:srcCompat="@drawable/circle"  />
 
 
     </FrameLayout>

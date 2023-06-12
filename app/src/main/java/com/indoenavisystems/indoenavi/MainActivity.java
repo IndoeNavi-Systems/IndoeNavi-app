@@ -3,30 +3,19 @@ package com.indoenavisystems.indoenavi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.indoenavisystems.indoenavi.ApiRequest;
-import com.indoenavisystems.indoenavi.ApiUrlConstants;
-import com.indoenavisystems.indoenavi.Interfaces.VolleyCallBack;
 import com.indoenavisystems.indoenavi.handlers.MapHandler;
 import com.indoenavisystems.indoenavi.models.Map;
+import com.indoenavisystems.indoenavi.models.RouteNode;
 import com.indoenavisystems.indoenavi.models.TrackedSPE;
 import com.indoenavisystems.indoenavi.models.Vec2;
 import com.android.volley.Request;
-import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 
-import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -48,9 +37,11 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
         setContentView(R.layout.activity_main);
+
+        getIntents();
+
         createStopButtonEvent();
         sendStatisticsData();
-        loadMapImage();
         startPositionPointerThread();
     }
 
@@ -65,30 +56,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private void sendStatisticsData(){
-        TextView tv = (TextView) findViewById(R.id.destinationTextView);
-        Intent intent = getIntent();
-        String destination = intent.getStringExtra("destination");
-        tv.setText(destination);
-
         String sessionUrl = ApiUrlConstants.NewSession+"?area=ZBC-Ringsted";
         String mostSearchedDestination = ApiUrlConstants.DestinationVisits+"?area=ZBC-Ringsted&destination=D.32";
         apiRequest.stringRequest(sessionUrl, Request.Method.POST, null);
         apiRequest.stringRequest(mostSearchedDestination,Request.Method.POST,null);
     }
 
-    private void loadMapImage(){
-        apiRequest.stringRequest(ApiUrlConstants.Map + "?area=ZBC-Ringsted", Request.Method.GET, new VolleyCallBack() {
-            @Override
-            public void onSuccess(Object successMessage) {
-                mapHandler.setMap(new Gson().fromJson(successMessage.toString(), Map.class));
-
-                ImageView mapImage = findViewById(R.id.mapImage);
-                mapImage.setImageBitmap(mapHandler.getMap().getBitmap());
-            }
-            @Override
-            public void onFail(VolleyError error) {
-            }
-        });
+    private void getIntents(){
+        //Set headline text to the name of the selected destination
+        TextView tv = (TextView) findViewById(R.id.destinationTextView);
+        Intent intent = getIntent();
+        if(intent.getExtras() != null){
+            RouteNode routeNode = (RouteNode) intent.getSerializableExtra("routeNode");
+            tv.setText(routeNode.name);
+            //Find map and set it to handler
+            mapHandler.setMap((Map) intent.getSerializableExtra("map"));
+            ImageView mapImage = findViewById(R.id.mapImage);
+            mapImage.setImageBitmap(mapHandler.getMap().getBitmap());
+        }
     }
     private void startPositionPointerThread(){
         new ScheduledThreadPoolExecutor(2).scheduleAtFixedRate(new Runnable() {

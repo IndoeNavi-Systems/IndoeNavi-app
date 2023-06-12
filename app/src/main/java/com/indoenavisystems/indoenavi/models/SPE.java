@@ -1,6 +1,8 @@
 package com.indoenavisystems.indoenavi.models;
 
-public class SPE {
+import java.io.Serializable;
+
+public class SPE implements Serializable {
     private double x;
     private double y;
     private String name;

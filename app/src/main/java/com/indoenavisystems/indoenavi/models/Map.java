@@ -5,7 +5,9 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 import com.google.gson.Gson;
 
-public class Map {
+import java.io.Serializable;
+
+public class Map implements Serializable {
     private String area = "";
     private double meterPerPixel = 1;
     private String imageData = ""; // Endcoded in base64
@@ -25,6 +27,9 @@ public class Map {
         return spes;
     }
 
+    public RouteNode[] getRouteNodes(){
+        return routeNodes;
+    }
     public Bitmap getBitmap(){
         byte[] imageBytes = Base64.decode(getImageData(), Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);

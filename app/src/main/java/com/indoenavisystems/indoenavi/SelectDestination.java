@@ -4,11 +4,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
+
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.indoenavisystems.indoenavi.Interfaces.VolleyCallBack;
+import com.indoenavisystems.indoenavi.adapters.RouteNodeArrayAdapter;
+import com.indoenavisystems.indoenavi.handlers.MapHandler;
+import com.indoenavisystems.indoenavi.models.Map;
+import com.indoenavisystems.indoenavi.models.RouteNode;
 
 import java.util.ArrayList;
 
@@ -17,8 +28,11 @@ public class SelectDestination extends AppCompatActivity {
     SearchView searchView;
     ListView listView;
 
-    ArrayList<String> arrayList;
-    ArrayAdapter<String> adapter;
+    ArrayList<RouteNode> arrayList;
+    ArrayAdapter<RouteNode> adapter;
+    private ApiRequest apiRequest;
+    private Map map;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,22 +45,14 @@ public class SelectDestination extends AppCompatActivity {
 
         setContentView(R.layout.activity_select_destination);
 
+        apiRequest = new ApiRequest(this);
+
         searchView = findViewById(R.id.destSearch);
         listView = findViewById(R.id.destList);
 
         searchView.setIconifiedByDefault(false);
 
-        arrayList = new ArrayList<>();
-        arrayList.add("D.30");
-        arrayList.add("D.31");
-        arrayList.add("D.32");
-        arrayList.add("D.33");
-        arrayList.add("C.35");
-        arrayList.add("P.03");
-
-        adapter=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayList);
-
-        listView.setAdapter(adapter);
+        loadMapImage();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -65,13 +71,41 @@ public class SelectDestination extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                String selectedItem = (String)adapterView.getItemAtPosition(position);
+                RouteNode selectedItem = (RouteNode)adapterView.getItemAtPosition(position);
 
                 Intent intent = new Intent(SelectDestination.this, com.indoenavisystems.indoenavi.MainActivity.class);
-                intent.putExtra("destination",selectedItem);
+                intent.putExtra("routeNode",selectedItem);
+                intent.putExtra("map",map);
                 startActivity(intent);
             }
         });
 
+    }
+
+    private void loadMapImage(){
+        apiRequest.stringRequest(ApiUrlConstants.Map + "?area=ZBC-Ringsted", Request.Method.GET, new VolleyCallBack() {
+            @Override
+            public void onSuccess(Object successMessage) {
+                map = new Gson().fromJson(successMessage.toString(), Map.class);
+
+                //When we get the new map, we add all destinations to the list
+                arrayList = new ArrayList<RouteNode>();
+
+                RouteNode[] nodes = map.getRouteNodes();
+                //Add all route nodes that is a destination.
+                for (RouteNode node : nodes){
+                    if(node.isDestination){
+                        arrayList.add(node);
+                    }
+                }
+
+                adapter=new RouteNodeArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1,arrayList);
+
+                listView.setAdapter(adapter);
+            }
+            @Override
+            public void onFail(VolleyError error) {
+            }
+        });
     }
 }

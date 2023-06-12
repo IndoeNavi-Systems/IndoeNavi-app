@@ -1,6 +1,8 @@
 package com.indoenavisystems.indoenavi.models;
 
-public class RouteNode {
+import java.io.Serializable;
+
+public class RouteNode implements Serializable {
     public int x;
     public int y;
     public boolean isDestination;

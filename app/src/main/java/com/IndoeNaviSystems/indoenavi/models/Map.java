@@ -1,9 +1,8 @@
-package com.IndoeNaviSystems.indoenavi.models;
+package com.indoenavisystems.indoenavi.models;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
-
 import com.google.gson.Gson;
 
 public class Map {
@@ -12,6 +11,7 @@ public class Map {
     private String imageData = ""; // Endcoded in base64
     private SPE[] spes = new SPE[0];
 
+    private RouteNode[] routeNodes = new RouteNode[0];
     public String getArea(){
         return area;
     }

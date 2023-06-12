@@ -1,4 +1,4 @@
-package com.IndoeNaviSystems.indoenavi.models;
+package com.indoenavisystems.indoenavi.models;
 
 public class SPE {
     private double x;

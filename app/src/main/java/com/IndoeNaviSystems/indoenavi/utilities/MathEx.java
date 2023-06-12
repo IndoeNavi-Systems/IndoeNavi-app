@@ -1,6 +1,6 @@
-package com.IndoeNaviSystems.indoenavi.utilities;
+package com.indoenavisystems.indoenavi.utilities;
 
-import com.IndoeNaviSystems.indoenavi.models.Vec2;
+import com.indoenavisystems.indoenavi.models.Vec2;
 
 public class MathEx {
     public static double cosRelation(double a, double b, double c)

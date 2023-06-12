@@ -1,4 +1,4 @@
-package com.IndoeNaviSystems.indoenavi.Interfaces;
+package com.indoenavisystems.indoenavi.Interfaces;
 
 import com.android.volley.VolleyError;
 

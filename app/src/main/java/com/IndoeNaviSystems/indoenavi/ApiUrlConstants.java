@@ -1,4 +1,4 @@
-package com.IndoeNaviSystems.indoenavi;
+package com.indoenavisystems.indoenavi;
 
 public class ApiUrlConstants {
 

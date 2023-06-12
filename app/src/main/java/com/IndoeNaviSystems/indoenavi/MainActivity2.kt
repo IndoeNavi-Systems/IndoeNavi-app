@@ -11,7 +11,6 @@ import com.estimote.uwb.api.ranging.EstimoteUWBRangingResult
 import com.estimote.uwb.api.scanning.EstimoteDevice
 import com.estimote.uwb.api.scanning.EstimoteUWBScanResult
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -19,9 +18,9 @@ import kotlinx.coroutines.launch
 class MainActivity2 : AppCompatActivity() {
 
     val uwbManager = EstimoteUWBFactory.create()
-    val devices = ArrayList<EstimoteDevice>();
-    var isActive : Boolean = false;
-    var index : Int = 0;
+    val devices = ArrayList<EstimoteDevice>()
+    var job: Job? = null
+    var job2: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +37,14 @@ class MainActivity2 : AppCompatActivity() {
                 is EstimoteUWBScanResult.Devices -> {
                     for (device in it.devices){
                         if (!checkIfDeviceExist(device)){
-                            devices.add(devices[index]);
-                            Log.d("UWB-A", "New device found!" + it.toString());
+                            devices.add(device);
+                            if(devices.size == 1){
+                                onMyMainActivityListItemClicked(device, 1);
+                            }
+                            if(devices.size == 2){
+                                onMyMainActivityListItemClicked(device,2);
+                            }
+                            Log.d("UWB-Adding estimote device", "New device found!" + it.toString());
 
                         }
                     }
@@ -49,35 +54,19 @@ class MainActivity2 : AppCompatActivity() {
             }
         }.launchIn(lifecycleScope)
         uwbManager.rangingResult.onEach {
-            Log.d("UWB-B", it.toString());
+            Log.d("UWB-RangingResult", it.toString());
             when(it){
                 is EstimoteUWBRangingResult.Position -> {
-
-                    Log.d("UWB-D", it.device.address.toString() + " : " + it.position.distance?.value.toString());
-                    onMyMainAcitivityDisconnectClick();
-                    isActive = false;
+                    Log.d("UWB-Distance", it.device.address.toString() + " : " + it.position.distance?.value.toString());
+                }
+                is EstimoteUWBRangingResult.PeerDisconnected -> {
+                    Log.d("UWB-Distance", "PeerDisconnected: ${it.device.address}");
                 }
                 else -> {}
             }
         }.launchIn(lifecycleScope)
+
         uwbManager.startDeviceScanning(this)
-
-        val t1 = Thread {
-            while(true){
-                if (devices.size > 5){
-                    if (!isActive){
-                        isActive = true;
-                        onMyMainActivityListItemClicked(devices[index]);
-                        index++;
-                        if (index > 5){
-                            index = 0;
-                        }
-                    }
-                }
-            }
-        }
-        t1.start()
-
     }
 
     private fun checkIfDeviceExist(device : EstimoteDevice): Boolean {
@@ -90,12 +79,23 @@ class MainActivity2 : AppCompatActivity() {
     }
 
     // Step 5 - call connect on selected UWB device to start ranging
-    private fun onMyMainActivityListItemClicked(device: EstimoteDevice) {
-        Log.d("UWB-C", device.toString());
-        uwbManager.connect(device.device!!, this)
-    }
-    // Step 6 - Optional - disconnect device ranging.
-    private fun onMyMainAcitivityDisconnectClick() {
-        uwbManager.disconnectDevice()
+    private fun onMyMainActivityListItemClicked(device: EstimoteDevice, jobint: Int) {
+        Log.d("UWB-Starting connect suspend", device.toString());
+        var ctx: Context = this;
+        if(jobint == 1) {
+            device.device?.let {
+                job = lifecycleScope.launch {
+                    uwbManager.connectSuspend(device.device!!, ctx)
+                }
+            }
+        }
+        if(jobint == 2) {
+            device.device?.let {
+                job2 = lifecycleScope.launch {
+                    uwbManager.connectSuspend(device.device!!, ctx)
+                }
+            }
+        }
+
     }
 }

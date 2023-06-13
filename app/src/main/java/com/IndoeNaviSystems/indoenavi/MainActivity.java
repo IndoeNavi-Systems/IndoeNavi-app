@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                         new TrackedSPE("00:00:00:03", 7.0));
 
                 // Update position pointer with latest indoor position
-                Vec2 position = mapHandler.getIndoorPosition();
+                Vec2 position = mapHandler.getLastKnownIndoorPosition();
                 ImageView mapPositionImage = findViewById(R.id.mapPositionImage);
                 mapPositionImage.setX((float)position.x - 8);
                 mapPositionImage.setY((float)position.y + 36);

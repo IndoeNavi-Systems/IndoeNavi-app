@@ -108,7 +108,7 @@ public class SelectDestination extends AppCompatActivity {
                     }
                 }
 
-                adapter=new RouteNodeArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, arrayList);
+                adapter=new RouteNodeArrayAdapter(getApplicationContext(), arrayList);
 
                 listView.setAdapter(adapter);
             }

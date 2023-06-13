@@ -3,62 +3,115 @@ package com.indoenavisystems.indoenavi.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.indoenavisystems.indoenavi.R;
 import com.indoenavisystems.indoenavi.models.RouteNode;
-
 import java.util.ArrayList;
+import java.util.List;
+import android.widget.Filterable;
 
-public class RouteNodeArrayAdapter extends ArrayAdapter<RouteNode> {
-    private Activity activity;
-    private ArrayList<RouteNode> nodes;
-    private static LayoutInflater inflater = null;
+public class RouteNodeArrayAdapter extends ArrayAdapter<RouteNode> implements Filterable {
 
-    public RouteNodeArrayAdapter(@NonNull Context context, int resource, @NonNull ArrayList<RouteNode> objects) {
-        super(context, resource, objects);
-        try {
-            this.activity = activity;
-            this.nodes = objects;
+    private LayoutInflater inflater;
+    private List<RouteNode> originalList;
+    private List<RouteNode> filteredList;
 
-            inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        } catch (Exception e) {
-
-        }
+    public RouteNodeArrayAdapter(Context context, List<RouteNode> nodes) {
+        super(context, 0, nodes);
+        inflater = LayoutInflater.from(context);
+        //Original unfiltered list
+        originalList = new ArrayList<>(nodes);
+        //Filtered list
+        filteredList = new ArrayList<>(nodes);
     }
 
-    @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        try {
-            RouteNode item = getItem(position);
-            View v = null;
-            if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public int getCount() {
+        return filteredList.size();
+    }
 
-                v = inflater.inflate(R.layout.routenodelistview, null);
+    @Override
+    public RouteNode getItem(int position) {
+        return filteredList.get(position);
+    }
 
-            } else {
-                v = convertView;
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+
+        if (convertView == null) {
+            //Inflate the layout for each item in the list
+            convertView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+
+            holder = new ViewHolder();
+            holder.nameTextView = convertView.findViewById(android.R.id.text1);
+
+            //Make text centered.
+            holder.nameTextView.setGravity(Gravity.CENTER);
+
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+
+        RouteNode node = getItem(position);
+
+        if (node != null) {
+            holder.nameTextView.setText(node.name);
+        }
+
+        return convertView;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
+                List<RouteNode> filteredNodes = new ArrayList<>();
+
+                if (constraint == null || constraint.length() == 0) {
+                    //If no constraint, then return the original unfiltered list
+                    filteredNodes.addAll(originalList);
+                } else {
+                    String filterPattern = constraint.toString().toLowerCase().trim();
+
+                    //Filter original list, based on constraint
+                    for (RouteNode node : originalList) {
+                        if (node.name.toLowerCase().contains(filterPattern)) {
+                            filteredNodes.add(node);
+                        }
+                    }
+                }
+
+                results.values = filteredNodes;
+                results.count = filteredNodes.size();
+                return results;
             }
 
-            TextView header = (TextView) v.findViewById(R.id.nodeName);
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                //Update the filtered list, and notify the change
+                filteredList.clear();
+                filteredList.addAll((List<RouteNode>) results.values);
+                notifyDataSetChanged();
+            }
+        };
+    }
 
-            header.setText(item.name);
-
-            return v;
-        } catch (Exception ex) {
-            Log.e("RouteNode", "error", ex);
-            return null;
-        }
+    private static class ViewHolder {
+        //Added ViewHolder class, in case we want to add more TextViews for the list
+        TextView nameTextView;
     }
 }
+

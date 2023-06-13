@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -32,6 +33,7 @@ public class SelectDestination extends AppCompatActivity {
     ArrayAdapter<RouteNode> adapter;
     private ApiRequest apiRequest;
     private Map map;
+    private String selectedLocation;
 
 
     @Override
@@ -44,6 +46,13 @@ public class SelectDestination extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_select_destination);
+
+        Intent intent = getIntent();
+        if(intent.getExtras() != null){
+            selectedLocation = intent.getStringExtra("location");
+            TextView tv = findViewById(R.id.locationHeader);
+            tv.setText(selectedLocation);
+        }
 
         apiRequest = new ApiRequest(this);
 
@@ -83,7 +92,7 @@ public class SelectDestination extends AppCompatActivity {
     }
 
     private void loadMapImage(){
-        apiRequest.stringRequest(ApiUrlConstants.Map + "?area=ZBC-Ringsted", Request.Method.GET, new VolleyCallBack() {
+        apiRequest.stringRequest(ApiUrlConstants.Map + "?area="+selectedLocation, Request.Method.GET, new VolleyCallBack() {
             @Override
             public void onSuccess(Object successMessage) {
                 map = new Gson().fromJson(successMessage.toString(), Map.class);

@@ -38,7 +38,8 @@ public class LocationSelector extends AppCompatActivity {
         searchView.setIconifiedByDefault(false);
 
         arrayList = new ArrayList<>();
-        arrayList.add("ZBC Ringsted");
+        arrayList.add("ZBC-Ringsted");
+        arrayList.add("MSG");
 
         adapter=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,arrayList);
 

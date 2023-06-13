@@ -1,9 +1,9 @@
-package com.IndoeNaviSystems.indoenavi;
+package com.indoenavisystems.indoenavi;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.IndoeNaviSystems.indoenavi.Interfaces.VolleyCallBack;
+import com.indoenavisystems.indoenavi.Interfaces.VolleyCallBack;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;

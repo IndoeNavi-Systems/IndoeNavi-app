@@ -1,4 +1,4 @@
-package com.IndoeNaviSystems.indoenavi;
+package com.indoenavisystems.indoenavi;
 
 import android.content.Context;
 import android.graphics.Bitmap;

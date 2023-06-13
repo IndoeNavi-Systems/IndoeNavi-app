@@ -1,32 +1,25 @@
 package com.indoenavisystems.indoenavi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.IndoeNaviSystems.indoenavi.ApiRequest;
-import com.IndoeNaviSystems.indoenavi.ApiUrlConstants;
-import com.IndoeNaviSystems.indoenavi.Interfaces.VolleyCallBack;
-import com.IndoeNaviSystems.indoenavi.handlers.MapHandler;
-import com.IndoeNaviSystems.indoenavi.models.Map;
-import com.IndoeNaviSystems.indoenavi.models.TrackedSPE;
-import com.IndoeNaviSystems.indoenavi.models.Vec2;
+import com.indoenavisystems.indoenavi.handlers.MapHandler;
+import com.indoenavisystems.indoenavi.models.Map;
+import com.indoenavisystems.indoenavi.models.RouteNode;
+import com.indoenavisystems.indoenavi.models.TrackedSPE;
+import com.indoenavisystems.indoenavi.models.Vec2;
 import com.android.volley.Request;
-import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 
-import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -34,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ApiRequest apiRequest;
     private MapHandler mapHandler;
+    private RouteNode routeNodeDestination;
 
     public MainActivity(){
         mapHandler = MapHandler.getInstance();
@@ -48,9 +42,11 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
         setContentView(R.layout.activity_main);
+
+        getIntents();
+
         createStopButtonEvent();
         sendStatisticsData();
-        loadMapImage();
         startPositionPointerThread();
     }
 
@@ -65,30 +61,29 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private void sendStatisticsData(){
-        TextView tv = (TextView) findViewById(R.id.destinationTextView);
-        Intent intent = getIntent();
-        String destination = intent.getStringExtra("destination");
-        tv.setText(destination);
-
         String sessionUrl = ApiUrlConstants.NewSession+"?area=ZBC-Ringsted";
         String mostSearchedDestination = ApiUrlConstants.DestinationVisits+"?area=ZBC-Ringsted&destination=D.32";
         apiRequest.stringRequest(sessionUrl, Request.Method.POST, null);
         apiRequest.stringRequest(mostSearchedDestination,Request.Method.POST,null);
     }
 
-    private void loadMapImage(){
-        apiRequest.stringRequest(ApiUrlConstants.Map + "?area=ZBC-Ringsted", Request.Method.GET, new VolleyCallBack() {
-            @Override
-            public void onSuccess(Object successMessage) {
-                mapHandler.setMap(new Gson().fromJson(successMessage.toString(), Map.class));
+    private void getIntents(){
+        //Set headline text to the name of the selected destination
+        TextView tv = (TextView) findViewById(R.id.destinationTextView);
+        Intent intent = getIntent();
+        if(intent.getExtras() != null){
+            routeNodeDestination = (RouteNode) intent.getSerializableExtra("routeNode");
+            tv.setText(routeNodeDestination.name);
 
+            //Find map and set it to handler
+            Map mapToSet = (Map) intent.getSerializableExtra("map");
+
+            if(mapToSet != null){
+                mapHandler.setMap(mapToSet);
                 ImageView mapImage = findViewById(R.id.mapImage);
                 mapImage.setImageBitmap(mapHandler.getMap().getBitmap());
             }
-            @Override
-            public void onFail(VolleyError error) {
-            }
-        });
+        }
     }
     private void startPositionPointerThread(){
         new ScheduledThreadPoolExecutor(2).scheduleAtFixedRate(new Runnable() {
@@ -105,7 +100,34 @@ public class MainActivity extends AppCompatActivity {
                 ImageView mapPositionImage = findViewById(R.id.mapPositionImage);
                 mapPositionImage.setX((float)position.x - 8);
                 mapPositionImage.setY((float)position.y + 36);
+
+                //Set the position of the destination circle
+                Vec2 destinationPosition = new Vec2(routeNodeDestination.x,routeNodeDestination.y);
+
+                createCircleImage(destinationPosition, R.drawable.destinationcircle);
             }
         }, 0, 250, TimeUnit.MILLISECONDS);
+    }
+
+    private void createCircleImage(Vec2 destinationPosition, int drawableId) {
+        FrameLayout fl = findViewById(R.id.mapFrame);
+        ImageView iv = new ImageView(getApplicationContext());
+
+        //Set image
+        iv.setImageResource(drawableId);
+        //Set size and dimensions
+        //Get the pixel density (dp) to scale up the pixels
+        float factor = iv.getResources().getDisplayMetrics().density;
+        int imageSize = (int) (16 * factor);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(imageSize, imageSize);
+        iv.setLayoutParams(params);
+
+        //Set position
+        iv.setX((float) destinationPosition.x - 8);
+        iv.setY((float) destinationPosition.y + 36);
+
+        //Add to FrameLayout
+        fl.addView(iv);
+        fl.invalidate();
     }
 }

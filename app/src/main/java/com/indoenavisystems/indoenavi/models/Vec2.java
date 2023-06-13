@@ -1,4 +1,4 @@
-package com.IndoeNaviSystems.indoenavi.models;
+package com.indoenavisystems.indoenavi.models;
 
 public class Vec2 {
     public double x = 0;

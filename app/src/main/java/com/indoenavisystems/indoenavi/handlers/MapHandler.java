@@ -1,11 +1,11 @@
-package com.IndoeNaviSystems.indoenavi.handlers;
+package com.indoenavisystems.indoenavi.handlers;
 
 import android.util.Log;
 
-import com.IndoeNaviSystems.indoenavi.models.Map;
-import com.IndoeNaviSystems.indoenavi.models.TrackedSPE;
-import com.IndoeNaviSystems.indoenavi.models.Vec2;
-import com.IndoeNaviSystems.indoenavi.utilities.MathEx;
+import com.indoenavisystems.indoenavi.models.Map;
+import com.indoenavisystems.indoenavi.models.TrackedSPE;
+import com.indoenavisystems.indoenavi.models.Vec2;
+import com.indoenavisystems.indoenavi.utilities.MathEx;
 
 public class MapHandler {
     private static MapHandler instance;

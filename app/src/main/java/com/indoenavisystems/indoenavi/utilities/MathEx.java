@@ -9,6 +9,8 @@ public class MathEx {
     }
     public static double distanceToPoint(Vec2 p1, Vec2 p2)
     {
-        return Math.sqrt(Math.abs(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2)));
+        return Math.sqrt(Math.abs(Math.pow(p2.getX() - p1.getX(), 2) + Math.pow(p2.getY() - p1.getY(), 2)));
     }
+
+    private MathEx(){}
 }

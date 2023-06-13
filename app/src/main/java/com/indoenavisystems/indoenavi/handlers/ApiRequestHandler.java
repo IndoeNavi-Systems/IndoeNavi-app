@@ -1,27 +1,22 @@
-package com.indoenavisystems.indoenavi;
+package com.indoenavisystems.indoenavi.handlers;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.indoenavisystems.indoenavi.Interfaces.VolleyCallBack;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
-public class ApiRequest {
-
+public class ApiRequestHandler {
     private Context ctx;
 
-    public ApiRequest(Context context) {
+    public ApiRequestHandler(Context context) {
         ctx = context;
     }
-
 
     public void jsonRequest(String url,int method, final VolleyCallBack callBack) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -40,7 +35,7 @@ public class ApiRequest {
                     }
                 }) {
         };
-        NetworkRequests.getInstance(ctx).addToRequestQueue(jsonObjectRequest);
+        NetworkRequestHandler.getInstance(ctx).addToRequestQueue(jsonObjectRequest);
     }
 
     public void stringRequest(String url, int method, final VolleyCallBack callBack) {
@@ -61,7 +56,7 @@ public class ApiRequest {
                 }
             }
         });
-        NetworkRequests.getInstance(ctx).addToRequestQueue(request);
+        NetworkRequestHandler.getInstance(ctx).addToRequestQueue(request);
     }
 
 }

@@ -3,12 +3,11 @@ package com.indoenavisystems.indoenavi.models;
 public class TrackedSPE {
     private String macAddress;
     private double distance;
-    private SPE spe;
+    private SPE spe = new SPE();
 
     public TrackedSPE(String macAddress, double distance){
         this.macAddress = macAddress;
         this.distance = distance;
-        this.spe = new SPE(0, 0, macAddress, "unknown");
     }
 
     public String getMacAddress() {

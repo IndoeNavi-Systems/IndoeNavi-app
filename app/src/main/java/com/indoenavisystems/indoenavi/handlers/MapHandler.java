@@ -10,7 +10,7 @@ import com.indoenavisystems.indoenavi.utilities.MathEx;
 public class MapHandler {
     private static MapHandler instance;
     private Map map = new Map();
-    private Vec2 lastKnownIndoorPosition = new Vec2();
+    private Vec2 lastKnownIndoorPosition = new Vec2(0, 0);
 
     private MapHandler(){}
     static {
@@ -53,7 +53,7 @@ public class MapHandler {
 
         double ab = MathEx.distanceToPoint(p1, p2);
         double angle = MathEx.cosRelation(d1, ab, d2);
-        Vec2 result = new Vec2(d1 * Math.cos(angle) + p1.x, d1 * Math.sin(angle) + p1.y);
+        Vec2 result = new Vec2(d1 * Math.cos(angle) + p1.getX(), d1 * Math.sin(angle) + p1.getY());
 
         double n1 = MathEx.distanceToPoint(lastKnownIndoorPosition, p3);
         double n2 = d3;

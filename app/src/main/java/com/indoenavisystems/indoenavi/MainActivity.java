@@ -1,37 +1,36 @@
 package com.indoenavisystems.indoenavi;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.indoenavisystems.indoenavi.handlers.ApiRequestHandler;
 import com.indoenavisystems.indoenavi.handlers.MapHandler;
 import com.indoenavisystems.indoenavi.models.Map;
 import com.indoenavisystems.indoenavi.models.RouteNode;
 import com.indoenavisystems.indoenavi.models.TrackedSPE;
 import com.indoenavisystems.indoenavi.models.Vec2;
 import com.android.volley.Request;
+import com.indoenavisystems.indoenavi.utilities.ApiUrlConstants;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ApiRequest apiRequest;
+    private ApiRequestHandler apiRequest;
     private MapHandler mapHandler;
     private RouteNode routeNodeDestination;
 
     public MainActivity(){
         mapHandler = MapHandler.getInstance();
-        apiRequest = new ApiRequest(this);
+        apiRequest = new ApiRequestHandler(this);
     }
 
     @Override
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if(intent.getExtras() != null){
             routeNodeDestination = (RouteNode) intent.getSerializableExtra("routeNode");
-            tv.setText(routeNodeDestination.name);
+            tv.setText(routeNodeDestination.getName());
 
             //Find map and set it to handler
             Map mapToSet = (Map) intent.getSerializableExtra("map");
@@ -98,11 +97,11 @@ public class MainActivity extends AppCompatActivity {
                 // Update position pointer with latest indoor position
                 Vec2 position = mapHandler.getLastKnownIndoorPosition();
                 ImageView mapPositionImage = findViewById(R.id.mapPositionImage);
-                mapPositionImage.setX((float)position.x - 8);
-                mapPositionImage.setY((float)position.y + 36);
+                mapPositionImage.setX((float)position.getX() - 8);
+                mapPositionImage.setY((float)position.getY() + 36);
 
                 //Set the position of the destination circle
-                Vec2 destinationPosition = new Vec2(routeNodeDestination.x,routeNodeDestination.y);
+                Vec2 destinationPosition = routeNodeDestination.getPosition();
 
                 createCircleImage(destinationPosition, R.drawable.destinationcircle);
             }
@@ -123,8 +122,8 @@ public class MainActivity extends AppCompatActivity {
         iv.setLayoutParams(params);
 
         //Set position
-        iv.setX((float) destinationPosition.x - 8);
-        iv.setY((float) destinationPosition.y + 36);
+        iv.setX((float) destinationPosition.getX() - 8);
+        iv.setY((float) destinationPosition.getY() + 36);
 
         //Add to FrameLayout
         fl.addView(iv);

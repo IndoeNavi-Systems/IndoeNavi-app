@@ -66,7 +66,7 @@ public class RouteNodeArrayAdapter extends ArrayAdapter<RouteNode> implements Fi
         RouteNode node = getItem(position);
 
         if (node != null) {
-            holder.nameTextView.setText(node.name);
+            holder.nameTextView.setText(node.getName());
         }
 
         return convertView;
@@ -88,7 +88,7 @@ public class RouteNodeArrayAdapter extends ArrayAdapter<RouteNode> implements Fi
 
                     //Filter original list, based on constraint
                     for (RouteNode node : originalList) {
-                        if (node.name.toLowerCase().contains(filterPattern)) {
+                        if (node.getName().toLowerCase().contains(filterPattern)) {
                             filteredNodes.add(node);
                         }
                     }

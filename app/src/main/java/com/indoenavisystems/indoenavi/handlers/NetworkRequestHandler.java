@@ -1,4 +1,4 @@
-package com.indoenavisystems.indoenavi;
+package com.indoenavisystems.indoenavi.handlers;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,13 +9,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
-public class NetworkRequests {
-    private static NetworkRequests instance;
+public class NetworkRequestHandler {
+    private static NetworkRequestHandler instance;
+    private static Context ctx;
     private RequestQueue requestQueue;
     private ImageLoader imageLoader;
-    private static Context ctx;
 
-    private NetworkRequests(Context context) {
+
+    private NetworkRequestHandler(Context context) {
         ctx = context;
         requestQueue = getRequestQueue();
 
@@ -36,9 +37,9 @@ public class NetworkRequests {
                 });
     }
 
-    public static synchronized NetworkRequests getInstance(Context context) {
+    public static synchronized NetworkRequestHandler getInstance(Context context) {
         if (instance == null) {
-            instance = new NetworkRequests(context);
+            instance = new NetworkRequestHandler(context);
         }
         return instance;
     }
@@ -52,8 +53,8 @@ public class NetworkRequests {
         return requestQueue;
     }
 
-    public <T> void addToRequestQueue(Request<T> req) {
-        getRequestQueue().add(req);
+    public <T> void addToRequestQueue(Request<T> request) {
+        getRequestQueue().add(request);
     }
 
     public ImageLoader getImageLoader() {

@@ -4,11 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -18,9 +16,10 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.indoenavisystems.indoenavi.Interfaces.VolleyCallBack;
 import com.indoenavisystems.indoenavi.adapters.RouteNodeArrayAdapter;
-import com.indoenavisystems.indoenavi.handlers.MapHandler;
+import com.indoenavisystems.indoenavi.handlers.ApiRequestHandler;
 import com.indoenavisystems.indoenavi.models.Map;
 import com.indoenavisystems.indoenavi.models.RouteNode;
+import com.indoenavisystems.indoenavi.utilities.ApiUrlConstants;
 
 import java.util.ArrayList;
 
@@ -31,7 +30,7 @@ public class SelectDestination extends AppCompatActivity {
 
     ArrayList<RouteNode> arrayList;
     ArrayAdapter<RouteNode> adapter;
-    private ApiRequest apiRequest;
+    private ApiRequestHandler apiRequest;
     private Map map;
     private String selectedLocation;
 
@@ -54,7 +53,7 @@ public class SelectDestination extends AppCompatActivity {
             tv.setText(selectedLocation);
         }
 
-        apiRequest = new ApiRequest(this);
+        apiRequest = new ApiRequestHandler(this);
 
         searchView = findViewById(R.id.destSearch);
         listView = findViewById(R.id.destList);
@@ -103,7 +102,7 @@ public class SelectDestination extends AppCompatActivity {
                 RouteNode[] nodes = map.getRouteNodes();
                 //Add all route nodes that is a destination.
                 for (RouteNode node : nodes){
-                    if(node.isDestination){
+                    if(node.getIsDestination()){
                         arrayList.add(node);
                     }
                 }

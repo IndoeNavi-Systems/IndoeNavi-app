@@ -12,8 +12,8 @@ public class Map implements Serializable {
     private double meterPerPixel = 1;
     private String imageData = ""; // Endcoded in base64
     private SPE[] spes = new SPE[0];
-
     private RouteNode[] routeNodes = new RouteNode[0];
+
     public String getArea(){
         return area;
     }
@@ -26,7 +26,6 @@ public class Map implements Serializable {
     public SPE[] getSpes(){
         return spes;
     }
-
     public RouteNode[] getRouteNodes(){
         return routeNodes;
     }
@@ -34,7 +33,6 @@ public class Map implements Serializable {
         byte[] imageBytes = Base64.decode(getImageData(), Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
     }
-
     public SPE getSpeFromMacAddress(String macAddress){
         for (int i = 0; i < spes.length; i++){
             if (spes[i].getMacAddress().equals(macAddress)){

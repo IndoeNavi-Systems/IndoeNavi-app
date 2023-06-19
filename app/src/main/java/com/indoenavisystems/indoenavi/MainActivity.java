@@ -1,6 +1,7 @@
 package com.indoenavisystems.indoenavi;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.uwb.RangingPosition;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.indoenavisystems.indoenavi.Interfaces.UWBCallback;
 import com.indoenavisystems.indoenavi.handlers.ApiRequestHandler;
 import com.indoenavisystems.indoenavi.handlers.MapHandler;
 import com.indoenavisystems.indoenavi.models.Map;
@@ -47,6 +49,12 @@ public class MainActivity extends AppCompatActivity {
         createStopButtonEvent();
         sendStatisticsData();
         startPositionPointerThread();
+        UWBController controller = new UWBController(this, getLifecycle(), new UWBCallback() {
+            @Override
+            public void rangeCallback(RangingPosition position) {
+
+            }
+        });
     }
 
     private void createStopButtonEvent(){

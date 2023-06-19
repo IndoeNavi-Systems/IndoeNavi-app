@@ -1,43 +1,38 @@
 package com.indoenavisystems.indoenavi
 
 import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import android.util.Log
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.lifecycleScope
 import com.estimote.uwb.api.EstimoteUWBFactory
 import com.estimote.uwb.api.ranging.EstimoteUWBRangingResult
 import com.estimote.uwb.api.scanning.EstimoteDevice
 import com.estimote.uwb.api.scanning.EstimoteUWBScanResult
-import com.indoenavisystems.indoenavi.Interfaces.UWBCallback
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class UWBController {
-    val ctx: Context
+class UWBActivity : AppCompatActivity() {
     val uwbManager = EstimoteUWBFactory.create()
-    var devices = ArrayList<EstimoteDevice>()
-    var job: Job? = null
-    val lifecycleScope: CoroutineScope
-    val uwbCallback: UWBCallback
+    var job: Job? = null;
 
-    constructor(ctx: Context, lifecycle: Lifecycle, callback: UWBCallback) {
-        this.ctx = ctx
-        this.lifecycleScope = lifecycle.coroutineScope;
-        this.uwbCallback = callback;
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_uwbactivity)
+        //Pause jobs and start a new one to range
         var oneTimeBool = true;
-
+        // Step 2 - Optional - call init and pass your activity/fragment/class implementing ActivityResultCaller parameter
+        // Step 3 - subscribe to observing UWB devices and ranging results
         uwbManager.uwbDevices.onEach {
             when (it){
                 is EstimoteUWBScanResult.Devices -> {
 
-                    val device = it.devices.find {  device -> device.deviceId.startsWith("F97191")}
-                    if(device != null && oneTimeBool){
+//                    val device = it.devices.find {  device -> device.deviceId.startsWith("F97191")}
+                    if(it.devices.size > 0 && oneTimeBool){
                         oneTimeBool = false;
-                        connectToUWBDevice(it.devices[0])
+                        onMyMainActivityListItemClicked(it.devices[0])
                     }
                 }
                 else -> {
@@ -46,11 +41,11 @@ class UWBController {
         }.launchIn(lifecycleScope)
 
         uwbManager.rangingResult.onEach {
-            Log.d("UWB-RangingResult", it.toString());
-            when(it){
+            //display Beacon position
+            when(it) {
                 is EstimoteUWBRangingResult.Position -> {
                     Log.d("UWB-Distance", it.device.address.toString() + " : " + it.position.distance?.value.toString());
-//                    uwbCallback.rangeCallback(it.position)
+
                 }
                 is EstimoteUWBRangingResult.PeerDisconnected -> {
                     Log.d("UWB-Distance", "PeerDisconnected: ${it.device.address}");
@@ -63,15 +58,28 @@ class UWBController {
                 EstimoteUWBRangingResult.Error.UwbSystemCallbackException -> Log.d("UWB2e",EstimoteUWBRangingResult.Error.UwbSystemCallbackException.message)
                 EstimoteUWBRangingResult.Initiated -> Log.d("UWB-i","Started ranging")
             }
+
         }.launchIn(lifecycleScope)
 
-        uwbManager.startDeviceScanning(ctx)
+        // Step 4 - start scanning for UWB devices. This triggers results in uwbDevices.
+        uwbManager.startDeviceScanning(this);
     }
 
-    private fun connectToUWBDevice(device: EstimoteDevice) {
+    // Step 5 - call connect on selected UWB device to start ranging
+    private fun onMyMainActivityListItemClicked(device: EstimoteDevice) {
+        var ctx: Context = this;
         job = lifecycleScope.launch {
-            device.device?.let {Log.d("UWB-De", "skrrt"); uwbManager.connectSuspend(it, ctx) }
+            device.device?.let {Log.d("UWB-","skrr"); uwbManager.connectSuspend(it, ctx) }
         }
     }
 
+    fun stopRanging() {
+        job?.cancel()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        //Stop ranging
+        job?.cancel()
+    }
 }

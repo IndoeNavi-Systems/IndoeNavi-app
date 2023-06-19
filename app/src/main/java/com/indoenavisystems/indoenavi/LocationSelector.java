@@ -3,6 +3,7 @@ package com.indoenavisystems.indoenavi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +14,7 @@ import android.widget.SearchView;
 
 import java.util.ArrayList;
 
-public class LocationSelector extends AppCompatActivity {
+public class LocationSelector extends Activity {
 
     SearchView searchView;
     ListView listView;
@@ -26,9 +27,6 @@ public class LocationSelector extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //Hide the action bar for more visual space.
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
 
         setContentView(R.layout.activity_location_selector);
 

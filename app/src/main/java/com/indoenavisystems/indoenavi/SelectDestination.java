@@ -2,6 +2,7 @@ package com.indoenavisystems.indoenavi;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -23,7 +24,7 @@ import com.indoenavisystems.indoenavi.utilities.ApiUrlConstants;
 
 import java.util.ArrayList;
 
-public class SelectDestination extends AppCompatActivity {
+public class SelectDestination extends Activity {
 
     SearchView searchView;
     ListView listView;
@@ -40,9 +41,6 @@ public class SelectDestination extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //Hide the action bar for more visual space.
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
 
         setContentView(R.layout.activity_select_destination);
 
@@ -81,7 +79,7 @@ public class SelectDestination extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 RouteNode selectedItem = (RouteNode)adapterView.getItemAtPosition(position);
 
-                Intent intent = new Intent(SelectDestination.this, com.indoenavisystems.indoenavi.MainActivity.class);
+                Intent intent = new Intent(SelectDestination.this, com.indoenavisystems.indoenavi.UWBActivity.class);
                 intent.putExtra("routeNode",selectedItem);
                 intent.putExtra("map",map);
                 startActivity(intent);

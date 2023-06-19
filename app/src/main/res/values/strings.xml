@@ -3,4 +3,5 @@
     <string name="current_location">ZBC Ringsted</string>
     <string name="current_destination">D.30</string>
     <string name="stop_text">Stop</string>
+    <string name="title_activity_uwbactivity">UWBActivity</string>
 </resources>

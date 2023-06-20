@@ -14,6 +14,13 @@ public class Map implements Serializable {
     private SPE[] spes = new SPE[0];
     private RouteNode[] routeNodes = new RouteNode[0];
 
+    public Map(){}
+
+    public Map(SPE[] spes, double meterPerPixel){
+        this.spes = spes;
+        this.meterPerPixel = meterPerPixel;
+    }
+
     public String getArea(){
         return area;
     }

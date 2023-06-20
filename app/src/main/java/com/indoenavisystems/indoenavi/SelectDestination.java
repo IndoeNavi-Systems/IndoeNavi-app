@@ -79,7 +79,7 @@ public class SelectDestination extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 RouteNode selectedItem = (RouteNode)adapterView.getItemAtPosition(position);
 
-                Intent intent = new Intent(SelectDestination.this, com.indoenavisystems.indoenavi.UWBActivity.class);
+                Intent intent = new Intent(SelectDestination.this, com.indoenavisystems.indoenavi.MainActivity.class);
                 intent.putExtra("routeNode",selectedItem);
                 intent.putExtra("map",map);
                 startActivity(intent);

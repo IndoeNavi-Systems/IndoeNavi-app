@@ -6,19 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.estimote.indoorsdk_module.view.IndoorLocationView
-        android:id="@+id/indoor_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:backgroundTint="@color/material_dynamic_neutral_variant90"
-        android:background="@drawable/rounded_corners_view"
-        app:layout_constraintBottom_toTopOf="@+id/stopBtn"
-        app:layout_constraintEnd_toEndOf="@+id/stopBtn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/stopBtn"
-        app:layout_constraintTop_toBottomOf="@+id/destinationTextView"
-        app:layout_constraintWidth_percent="0.6" />
-
     <TextView
         android:id="@+id/destinationTextView"
         android:layout_width="wrap_content"
